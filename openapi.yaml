@@ -1,0 +1,148 @@
+openapi: 3.0.3
+info:
+  title: Garage Door Status API
+  description: API for updating and monitoring garage door status
+  version: 1.0.0
+
+paths:
+  /garage-door/status:
+    get:
+      summary: Get garage door status
+      description: Retrieves the current status of the garage door
+      operationId: getGarageDoorStatus
+      security: [] # No Security on the GET
+      responses:
+        '200':
+          description: Successfully retrieved garage door status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GarageDoorStatus'
+              examples:
+                open:
+                  summary: Garage door is open
+                  value:
+                    status: OPEN
+                closed:
+                  summary: Garage door is closed
+                  value:
+                    status: CLOSED
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: "Unauthorized"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: "Internal server error"
+      tags:
+        - Garage Door
+
+    post:
+      summary: Update garage door status
+      description: Updates the status of the garage door
+      operationId: updateGarageDoorStatus
+      security:
+        - api_key: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GarageDoorStatus'
+            examples:
+              open:
+                summary: Set garage door to open
+                value:
+                  status: OPEN
+              closed:
+                summary: Set garage door to closed
+                value:
+                  status: CLOSED
+      responses:
+        '200':
+          description: Successfully updated garage door status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GarageDoorStatus'
+              examples:
+                updated_open:
+                  summary: Updated to open
+                  value:
+                    status: OPEN
+                updated_closed:
+                  summary: Updated to closed
+                  value:
+                    status: CLOSED
+        '400':
+          description: Bad request - Invalid status value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: "Invalid status value. Must be OPEN or CLOSED"
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: "Unauthorized"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: "Internal server error"
+      tags:
+        - Garage Door
+
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: x-api-key
+      in: header
+
+  schemas:
+    GarageDoorStatus:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - OPEN
+            - CLOSED
+          description: Current status of the garage door
+          example: CLOSED
+      additionalProperties: false
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Error message describing what went wrong
+          example: "An error occurred"
+      additionalProperties: false
+
+tags:
+  - name: Garage Door
+    description: Operations related to garage door control
