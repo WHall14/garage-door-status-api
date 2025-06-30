@@ -11,7 +11,7 @@ Install the OpenAPI Generator, I used `npm` for this
 ### Status - Update
 Generate the models from the top level dir
 ```bash
-  openapi-generator-cli generate -i openapi.yaml -g rust -o garage-status-update/src/generated --global-property models,modelDocs=false
+  openapi-generator-cli generate -i openapi.yaml -g rust -o garage-status/src/generated --global-property models,modelDocs=false
 ```
 
 ## Generate ZIP
